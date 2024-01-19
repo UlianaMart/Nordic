@@ -172,20 +172,21 @@ class Hel(pygame.sprite.Sprite):
         self.rect.x = 451
         self.rect.y = 551
         self.fl = True
+        self.play = True
         self.n = 100
-        self.na = [451, 601]
+        self.na = [451, 551]
 
     def update(self, n, sten, firr, firb, t=0):
         if t == 1:
             self.fl = True
             self.rect.x = 51
             self.rect.y = 551
-            self.na = [51, 601]
+            self.na = [51, 551]
         elif t == 2:
             self.fl = True
             self.rect.x = 301
             self.rect.y = 551
-            self.na = [301, 601]
+            self.na = [301, 551]
         else:
             '''выигрыш 1, 2'''
             if (self.rect.x <= 1 and self.rect.y == 151) or (self.rect.x >= 549 and self.rect.y == 151):
@@ -202,24 +203,34 @@ class Hel(pygame.sprite.Sprite):
                     if not pygame.sprite.spritecollideany(self, sten) and self.rect.x >= 1 and self.rect.x <= 600 and self.rect.y >= 1 and self.rect.y <= 610:
                         self.fl = True
                         if n == 1:
-                            self.rect.x += 1
-                            self.image = self.im4
+                            if self.play:
+                                self.rect.x += 1
+                                self.image = self.im4
                         elif n == 2:
-                            self.rect.x -= 1
-                            self.image = self.im3
+                            if self.play:
+                                self.rect.x -= 1
+                                self.image = self.im3
                         elif n == 3:
+                            self.fl = True
                             self.image = self.im2
-                            self.rect.y -= 1
+                            if self.play:
+                                self.rect.y -= 1
+                            else:
+                                self.play = True
+                                break
                         elif n == 4:
-                            self.image = self.im
-                            self.rect.y += 1
-                        screen.fill((0, 0, 0))
-                        all_sprites.draw(screen)
-                        sten.draw(screen)
+                            if self.play:
+                                self.image = self.im
+                                self.rect.y += 1
+                        if self.play:
+                            screen.fill((0, 0, 0))
+                            all_sprites.draw(screen)
+                            sten.draw(screen)
                     else:
                         self.fl = False
                         screen.fill((0, 0, 0))
                         over.draw(screen)
+                        self.play = False
                         self.rect.x = self.na[0]
                         self.rect.y = self.na[1]
                         self.n = 100
@@ -229,15 +240,18 @@ class Hel(pygame.sprite.Sprite):
                     text = font.render(f"{self.n} xp", True, ('Green'))
                     text_x = 530
                     text_y = 15
+                    self.play = False
                     screen.blit(text, (text_x, text_y))
                 if pygame.sprite.spritecollideany(self, firr):
                     self.n -= 50
                     text = font.render(f"{self.n} xp", True, ('Green'))
                     text_x = 530
                     text_y = 15
+                    self.play = False
                     screen.blit(text, (text_x, text_y))
                 if self.n <= 0:
                     self.fl = False
+                    self.play = False
                     screen.fill((0, 0, 0))
                     over.draw(screen)
                     self.rect.x = 451
@@ -247,7 +261,7 @@ class Hel(pygame.sprite.Sprite):
 
 
     def fir(self, fir, fib, sten):
-        if self.fl:
+        if self.fl and self.play:
             screen.fill((0, 0, 0))
             fir.draw(screen)
             fir.update()
@@ -398,9 +412,7 @@ if __name__ == '__main__':
                 if nacho:
                     rules.draw(screen)
                 if nacht:
-                    screen.fill((0, 0, 0))
-                    all_sprites.draw(screen)
-                    walo.draw(screen)
+                    nacho = False
                     if pygame.key.get_pressed()[pygame.K_RIGHT]:
                         all_sprites.update(1, walo, firesro, firesbo)
                     if pygame.key.get_pressed()[pygame.K_LEFT]:
@@ -413,9 +425,6 @@ if __name__ == '__main__':
                     if nacht:
                         all_sprites.update(1, walt, firesrt, firesbt, 1)
                     nacht = False
-                    screen.fill((0, 0, 0))
-                    all_sprites.draw(screen)
-                    walt.draw(screen)
                     if pygame.key.get_pressed()[pygame.K_RIGHT]:
                         all_sprites.update(1, walt, firesrt, firesbt)
                     if pygame.key.get_pressed()[pygame.K_LEFT]:
@@ -428,9 +437,6 @@ if __name__ == '__main__':
                     if nachth:
                         all_sprites.update(1, walt, firesrt, firesbt, 2)
                     nachth = False
-                    screen.fill((0, 0, 0))
-                    all_sprites.draw(screen)
-                    walth.draw(screen)
                     if pygame.key.get_pressed()[pygame.K_RIGHT]:
                         all_sprites.update(1, walth, firesrth, firesbth)
                     if pygame.key.get_pressed()[pygame.K_LEFT]:
