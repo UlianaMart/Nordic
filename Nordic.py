@@ -287,8 +287,8 @@ class Hel(pygame.sprite.Sprite):
                     self.fl = False
                     screen.fill((0, 0, 0))
                     over.draw(screen)
-                    self.rect.x = 451
-                    self.rect.y = 601
+                    self.rect.x = self.na[0]
+                    self.rect.y = self.na[1]
                     self.n = 100
 
     def fir(self):
